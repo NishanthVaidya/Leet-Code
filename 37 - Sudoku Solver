@@ -1,0 +1,28 @@
+from typing import List
+
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        def is_valid(num: str, row: int, col: int) -> bool:
+            box_row, box_col = row // 3 * 3, col // 3 * 3
+            return all(
+                board[row][c] != num for c in range(9)
+            ) and all(
+                board[r][col] != num for r in range(9)
+            ) and all(
+                board[r][c] != num for r in range(box_row, box_row + 3)
+                for c in range(box_col, box_col + 3)
+            )
+
+        def dfs() -> bool:
+            for i in range(9):
+                for j in range(9):
+                    if board[i][j] == ".":
+                        for num in "123456789":
+                            if is_valid(num, i, j):
+                                board[i][j] = num
+                                if dfs():
+                                    return True
+                                board[i][j] = "." 
+                        return False  
+            return True  
+        dfs()
